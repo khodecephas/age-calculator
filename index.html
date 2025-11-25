@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎂 Age Calculator</h1>
+        <p class="subtitle">Calculate your exact age and discover fun facts!</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="birthDate">Select Your Birth Date</label>
+                <input type="date" id="birthDate" max="">
+            </div>
+
+            <div class="input-group">
+                <label>Or Enter Manually</label>
+                <div class="date-grid">
+                    <div>
+                        <input type="text" id="day" placeholder="Day (1-31)" maxlength="2">
+                    </div>
+                    <div>
+                        <input type="text" id="month" placeholder="Month (1-12)" maxlength="2">
+                    </div>
+                    <div>
+                        <input type="text" id="year" placeholder="Year (e.g. 2000)" maxlength="4">
+                    </div>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateAge()">Calculate My Age</button>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="result-card">
+                <div class="result-main">
+                    <div class="age-display" id="ageDisplay">25 Years</div>
+                    <div class="age-label">Your Current Age</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="months">0</div>
+                        <div class="stat-label">Months Old</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="weeks">0</div>
+                        <div class="stat-label">Weeks Old</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="days">0</div>
+                        <div class="stat-label">Days Old</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="hours">0</div>
+                        <div class="stat-label">Hours Old</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="next-birthday">
+                <h3>🎉 Next Birthday</h3>
+                <div class="countdown" id="nextBirthday">...</div>
+            </div>
+
+            <div class="fun-facts">
+                <h3>✨ Fun Facts About You</h3>
+                <div class="fact-item">
+                    <span class="fact-icon">🌍</span>
+                    <span id="earthRotations">You've experienced 0 Earth rotations</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">☀️</span>
+                    <span id="sunOrbits">You've orbited the Sun 0 times</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">💓</span>
+                    <span id="heartbeats">Your heart has beaten approximately 0 times</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">😴</span>
+                    <span id="sleepDays">You've slept for about 0 days</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🌙</span>
+                    <span id="moonPhases">You've seen the Moon cycle 0 times</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🎂</span>
+                    <span id="dayOfWeek">You were born on a ...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set max date to today
+        document.getElementById('birthDate').max = new Date().toISOString().split('T')[0];
+
+        // Sync date picker with manual inputs
+        document.getElementById('birthDate').addEventListener('change', function() {
+            const date = new Date(this.value);
+            document.getElementById('day').value = date.getDate();
+            document.getElementById('month').value = date.getMonth() + 1;
+            document.getElementById('year').value = date.getFullYear();
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 3000);
+        }
+
+        function calculateAge() {
+            let birthDate;
+            const dateInput = document.getElementById('birthDate').value;
+            
+            if (dateInput) {
+                birthDate = new Date(dateInput);
+            } else {
+                const day = parseInt(document.getElementById('day').value);
+                const month = parseInt(document.getElementById('month').value);
+                const year = parseInt(document.getElementById('year').value);
+                
+                if (!day || !month || !year) {
+                    showError('Please enter your complete birth date!');
+                    return;
+                }
+                
+                if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > new Date().getFullYear()) {
+                    showError('Please enter a valid date!');
+                    return;
+                }
+                
+                birthDate = new Date(year, month - 1, day);
+            }
+
+            if (isNaN(birthDate.getTime())) {
+                showError('Invalid date! Please try again.');
+                return;
+            }
+
+            const today = new Date();
+            
+            if (birthDate > today) {
+                showError('Birth date cannot be in the future!');
+                return;
+            }
+
+            // Calculate age
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Calculate total values
+            const totalDays = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+            const totalWeeks = Math.floor(totalDays / 7);
+            const totalMonths = years * 12 + months;
+            const totalHours = totalDays * 24;
+
+            // Update main display
+            document.getElementById('ageDisplay').textContent = 
+                `${years} Years, ${months} Months, ${days} Days`;
+            
+            // Update stats
+            document.getElementById('months').textContent = totalMonths.toLocaleString();
+            document.getElementById('weeks').textContent = totalWeeks.toLocaleString();
+            document.getElementById('days').textContent = totalDays.toLocaleString();
+            document.getElementById('hours').textContent = totalHours.toLocaleString();
+
+            // Calculate next birthday
+            let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const daysUntilBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+            
+            if (daysUntilBirthday === 0) {
+                document.getElementById('nextBirthday').textContent = '🎉 Happy Birthday! 🎉';
+            } else if (daysUntilBirthday === 1) {
+                document.getElementById('nextBirthday').textContent = 'Tomorrow! 🎈';
+            } else {
+                document.getElementById('nextBirthday').textContent = `${daysUntilBirthday} days to go!`;
+            }
+
+            // Fun facts
+            document.getElementById('earthRotations').textContent = 
+                `You've experienced ${totalDays.toLocaleString()} Earth rotations`;
+            
+            document.getElementById('sunOrbits').textContent = 
+                `You've orbited the Sun ${years} times`;
+            
+            const heartbeats = totalDays * 100000; // Average 100k beats per day
+            document.getElementById('heartbeats').textContent = 
+                `Your heart has beaten approximately ${(heartbeats / 1000000).toFixed(1)} million times`;
+            
+            const sleepDays = Math.floor(totalDays / 3); // Assuming 8 hours sleep
+            document.getElementById('sleepDays').textContent = 
+                `You've slept for about ${sleepDays.toLocaleString()} days (${(sleepDays/365).toFixed(1)} years!)`;
+            
+            const moonCycles = Math.floor(totalDays / 29.5);
+            document.getElementById('moonPhases').textContent = 
+                `You've seen the Moon cycle ${moonCycles.toLocaleString()} times`;
+            
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('dayOfWeek').textContent = 
+                `You were born on a ${daysOfWeek[birthDate.getDay()]}`;
+
+            // Show results
+            document.getElementById('results').classList.add('show');
+        }
+
+        // Allow Enter key to calculate
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateAge();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
