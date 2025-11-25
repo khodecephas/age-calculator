@@ -10,6 +10,9 @@
     <div class="container">
         <h1>🎂 Age Calculator</h1>
         <p class="subtitle">Calculate your exact age and discover fun facts!</p>
+        <div class="credit">
+            Built by <a href="https://github.com/khodecephas" target="_blank">Khode Cephas</a>
+        </div>
 
         <div class="input-section">
             <div class="input-group">
@@ -93,6 +96,42 @@
                 <div class="fact-item">
                     <span class="fact-icon">🎂</span>
                     <span id="dayOfWeek">You were born on a ...</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">😊</span>
+                    <span id="smiles">You've smiled approximately 0 times</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🍕</span>
+                    <span id="meals">You've eaten about 0 meals</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">👣</span>
+                    <span id="steps">You've taken approximately 0 steps</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">💧</span>
+                    <span id="water">You've drunk about 0 liters of water</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🎬</span>
+                    <span id="movies">You could've watched 0 movies</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">📚</span>
+                    <span id="books">You could've read 0 books</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🎮</span>
+                    <span id="games">You've had time for 0 hours of gaming</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🌟</span>
+                    <span id="breaths">You've taken approximately 0 breaths</span>
+                </div>
+                <div class="fact-item">
+                    <span class="fact-icon">🏃</span>
+                    <span id="distance">You've potentially walked 0 km in your lifetime</span>
                 </div>
             </div>
         </div>
@@ -221,6 +260,43 @@
             const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             document.getElementById('dayOfWeek').textContent = 
                 `You were born on a ${daysOfWeek[birthDate.getDay()]}`;
+
+            // Additional fun facts
+            const smiles = totalDays * 20; // Average 20 smiles per day
+            document.getElementById('smiles').textContent = 
+                `You've smiled approximately ${smiles.toLocaleString()} times`;
+            
+            const meals = totalDays * 3; // 3 meals per day
+            document.getElementById('meals').textContent = 
+                `You've eaten about ${meals.toLocaleString()} meals`;
+            
+            const steps = totalDays * 7500; // Average 7500 steps per day
+            document.getElementById('steps').textContent = 
+                `You've taken approximately ${(steps / 1000000).toFixed(1)} million steps`;
+            
+            const waterLiters = totalDays * 2; // 2 liters per day
+            document.getElementById('water').textContent = 
+                `You've drunk about ${waterLiters.toLocaleString()} liters of water`;
+            
+            const movieHours = totalHours / 2; // Assuming 2 hour movies
+            document.getElementById('movies').textContent = 
+                `You could've watched ${Math.floor(movieHours).toLocaleString()} movies`;
+            
+            const bookHours = totalHours / 5; // 5 hours per book
+            document.getElementById('books').textContent = 
+                `You could've read ${Math.floor(bookHours).toLocaleString()} books`;
+            
+            const gameHours = totalHours;
+            document.getElementById('games').textContent = 
+                `You've had time for ${gameHours.toLocaleString()} hours of gaming`;
+            
+            const breaths = totalDays * 20000; // Average 20k breaths per day
+            document.getElementById('breaths').textContent = 
+                `You've taken approximately ${(breaths / 1000000).toFixed(1)} million breaths`;
+            
+            const walkingDistance = (steps / 1300); // Approx 1300 steps per km
+            document.getElementById('distance').textContent = 
+                `You've potentially walked ${Math.floor(walkingDistance).toLocaleString()} km in your lifetime`;
 
             // Show results
             document.getElementById('results').classList.add('show');
